@@ -302,10 +302,12 @@ function __processAuthData(authData) {
 }
 
 function __buildCurrentUser(tokenData, userData) {
+  var attributes = _utils.StrUtils.camelCaseKeys(userData.data.attributes);
+
   __currentUser = {
     id: tokenData.user.id,
     permissions: tokenData.permissions,
-    attributes: userData.data.attributes,
+    attributes: attributes,
     isGuest: function isGuest() {
       // TODO: This needs to be built from API data
       return false;

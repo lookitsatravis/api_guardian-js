@@ -2,6 +2,7 @@ import chai from 'chai';
 import * as support from './support';
 import UrlUtils from '../lib/api_guardian/utils/url';
 import TokenUtils from '../lib/api_guardian/utils/token';
+import StrUtils from '../lib/api_guardian/utils/str';
 
 chai.should();
 
@@ -40,6 +41,25 @@ describe('Utils', () => {
 
         let result = TokenUtils.isAuthDataValid(authData);
         result.should.equal(false);
+      });
+    });
+  });
+
+  describe('StrUtils', () => {
+    describe('.camelCaseKeys', () => {
+      it('should convert an objects keys to camelCase', () => {
+        let obj = {
+          'first-name': 'foo',
+          last_name: 'bar',
+          emailAddress: 'baz'
+        };
+
+        let result = StrUtils.camelCaseKeys(obj);
+        result.should.eql({
+          firstName: 'foo',
+          lastName: 'bar',
+          emailAddress: 'baz'
+        });
       });
     });
   });
