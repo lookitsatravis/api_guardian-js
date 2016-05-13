@@ -210,6 +210,14 @@ var ApiGuardian = function () {
       return refreshCurrentUser;
     }()
   }, {
+    key: 'logout',
+    value: function logout() {
+      // TODO: Ddigits logout
+      this.clearAuthData();
+      this.clearCurrentUser();
+      return Promise.resolve();
+    }
+  }, {
     key: 'getAuthData',
     value: function getAuthData() {
       var ls = __getLocalStorage.call(this);
@@ -324,7 +332,6 @@ exports.default = ApiGuardian;
 //   this.registerAsGuest = registerAsGuest;
 //   this.register = register;
 //   this.loginWithDigits = loginWithDigits;
-//   this.logOut = logOut;
 //   this.resetPassword = resetPassword;
 //   this.completeResetPassword = completeResetPassword;
 //   this.refreshSession = refreshSession;
@@ -389,25 +396,6 @@ exports.default = ApiGuardian;
 //           password: encodedPassword
 //         });
 //       });
-//   }
-//
-//   function logOut() {
-//     // TODO: Potentially restore digits logout
-//     var deferred = $q.defer();
-//
-//     DeviceService.deregister()
-//       .finally(function() {
-//         if(_this._currentUser) {
-//           _this._currentUser = null;
-//         }
-//
-//         _this.clearAccessToken();
-//
-//         $rootScope.$emit(LOGOUT_SUCCESS);
-//         deferred.resolve();
-//       })
-//
-//     return deferred.promise;
 //   }
 //
 //   function resetPassword(email) {
