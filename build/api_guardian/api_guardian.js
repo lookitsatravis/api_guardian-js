@@ -260,6 +260,9 @@ function __initialize(options) {
   __buildConfig.call(this, options);
   __initLocalStorage.call(this);
 
+  var accessToken = this.getAccessToken();
+  _http2.default.setAccessToken(accessToken);
+
   this._inited = true;
 }
 
