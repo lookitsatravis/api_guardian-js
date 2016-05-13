@@ -53,6 +53,8 @@ describe('ApiGuardian', () => {
       // overridden config
       api_guardian.config.apiUrl.should.eql('/test');
     })
+
+    it('sets up access token if one exists');
   });
 
   describe('#config', () => {
