@@ -11,7 +11,8 @@ describe('ApiGuardian', () => {
   let defaultConfig = {
     apiUrl: 'http://localhost:3000',
     localStorageKey: 'ag',
-    loginUrl: 'auth/access/token'
+    loginUrl: 'auth/access/token',
+    userUrl: 'users/:id'
   };
 
   let api_guardian;
@@ -27,7 +28,7 @@ describe('ApiGuardian', () => {
 
     it('should initialize local storage', () => {
       localStorage.getItem('ag').should.equal(JSON.stringify({
-        accessToken: null
+        authData: null
       }));
     });
 
@@ -37,7 +38,7 @@ describe('ApiGuardian', () => {
       api_guardian = new ApiGuardian();
 
       localStorage.getItem('ag').should.not.equal(JSON.stringify({
-        accessToken: null
+        authData: null
       }));
     });
 
