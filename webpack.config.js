@@ -6,7 +6,7 @@ var DEVELOPMENT = NODE_ENV === 'development';
 var PRODUCTION = NODE_ENV === 'production';
 
 var config = {
-  entry: './lib/api_guradian.js',
+  entry: './lib/index.js',
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "api_guardian.js"
