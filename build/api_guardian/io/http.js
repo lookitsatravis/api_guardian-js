@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
@@ -30,6 +32,16 @@ var Http = function () {
       return _accessToken;
     }
   }, {
+    key: 'getJson',
+    value: function getJson(url) {
+      var skipAuthorization = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+      var request = {
+        method: 'GET'
+      };
+      return this.fetchJson(url, request, skipAuthorization);
+    }
+  }, {
     key: 'postJson',
     value: function postJson(url, request) {
       var skipAuthorization = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
@@ -47,6 +59,10 @@ var Http = function () {
       }
 
       request.headers['Content-Type'] = 'application/json';
+
+      if (request.body && _typeof(request.body) !== String) {
+        request.body = JSON.stringify(request.body);
+      }
 
       return this.$fetch(url, request, skipAuthorization);
     }
@@ -94,7 +110,7 @@ var Http = function () {
 
               case 12:
                 json = _context.sent;
-                return _context.abrupt('return', response.ok ? Promise.resolve(json.data) : Promise.reject(this.parseError(json)));
+                return _context.abrupt('return', response.ok ? Promise.resolve(json) : Promise.reject(json));
 
               case 14:
                 _context.next = 19;
@@ -122,7 +138,7 @@ var Http = function () {
         }, _callee, this, [[1, 21], [5, 16]]);
       }));
 
-      function $fetch(_x3, _x4, _x5) {
+      function $fetch(_x4, _x5, _x6) {
         return ref.apply(this, arguments);
       }
 

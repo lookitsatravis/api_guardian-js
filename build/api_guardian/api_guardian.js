@@ -30,7 +30,8 @@ var __config = void 0;
 var __defaultConfig = {
   localStorageKey: constants.DEFAULT_LOCAL_STORAGE_KEY,
   apiUrl: 'http://localhost:3000',
-  loginUrl: 'auth/access/token'
+  loginUrl: 'auth/access/token',
+  userUrl: 'users/:id'
 };
 var __currentUser = null;
 
@@ -110,53 +111,42 @@ var ApiGuardian = function () {
   }, {
     key: 'login',
     value: function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(options) {
-        var loginUrl, response, _data;
-
+      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(body) {
+        var request = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+        var loginUrl, response;
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
                 loginUrl = _utils.UrlUtils.buildLoginUrl(this.config.apiUrl, this.config.loginUrl);
-                _context3.prev = 1;
-                _context3.next = 4;
-                return _http2.default.postJson(loginUrl, options, true);
 
-              case 4:
+
+                request.body = body;
+
+                _context3.prev = 2;
+                _context3.next = 5;
+                return _http2.default.postJson(loginUrl, request, true);
+
+              case 5:
                 response = _context3.sent;
-                _context3.prev = 5;
-                _context3.next = 8;
-                return response.json();
 
-              case 8:
-                _data = _context3.sent;
-
-                __processAuthData.call(this, _data);
+                __processAuthData.call(this, response);
                 return _context3.abrupt('return', this.refreshCurrentUser());
 
-              case 13:
-                _context3.prev = 13;
-                _context3.t0 = _context3['catch'](5);
+              case 10:
+                _context3.prev = 10;
+                _context3.t0 = _context3['catch'](2);
                 return _context3.abrupt('return', Promise.reject(_context3.t0));
 
-              case 16:
-                _context3.next = 21;
-                break;
-
-              case 18:
-                _context3.prev = 18;
-                _context3.t1 = _context3['catch'](1);
-                return _context3.abrupt('return', Promise.reject(_context3.t1));
-
-              case 21:
+              case 13:
               case 'end':
                 return _context3.stop();
             }
           }
-        }, _callee3, this, [[1, 18], [5, 13]]);
+        }, _callee3, this, [[2, 10]]);
       }));
 
-      function login(_x5) {
+      function login(_x5, _x6) {
         return ref.apply(this, arguments);
       }
 
@@ -166,8 +156,7 @@ var ApiGuardian = function () {
     key: 'refreshCurrentUser',
     value: function () {
       var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
-        var authData, accessToken, tokenData, userUrl, response, _data2;
-
+        var authData, accessToken, tokenData, userUrl, response;
         return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
@@ -175,54 +164,43 @@ var ApiGuardian = function () {
                 authData = this.getAuthData();
 
                 if (!_utils.TokenUtils.isAuthDataValid(authData)) {
-                  _context4.next = 25;
+                  _context4.next = 18;
                   break;
                 }
 
                 accessToken = authData.access_token;
                 tokenData = _utils.TokenUtils.decodeAccessToken(accessToken);
-                userUrl = _utils.UrlUtils.buildLoginUrl(tokenData.user.id);
+                userUrl = _utils.UrlUtils.buildUserUrl(this.config.apiUrl, this.config.userUrl, tokenData.user.id);
                 _context4.prev = 5;
                 _context4.next = 8;
                 return _http2.default.getJson(userUrl);
 
               case 8:
                 response = _context4.sent;
-                _context4.prev = 9;
-                _data2 = response.json();
 
-                __buildCurrentUser.call(this, tokenData, _data2);
-                return _context4.abrupt('return', Promise.resolve(this.currentUser()));
+                __buildCurrentUser.call(this, tokenData, response);
+                return _context4.abrupt('return', Promise.resolve(this.currentUser));
 
-              case 15:
-                _context4.prev = 15;
-                _context4.t0 = _context4['catch'](9);
+              case 13:
+                _context4.prev = 13;
+                _context4.t0 = _context4['catch'](5);
                 return _context4.abrupt('return', Promise.reject(_context4.t0));
 
+              case 16:
+                _context4.next = 21;
+                break;
+
               case 18:
-                _context4.next = 23;
-                break;
-
-              case 20:
-                _context4.prev = 20;
-                _context4.t1 = _context4['catch'](5);
-                return _context4.abrupt('return', Promise.reject(_context4.t1));
-
-              case 23:
-                _context4.next = 28;
-                break;
-
-              case 25:
                 this.clearAuthData();
                 this.clearCurrentUser();
                 return _context4.abrupt('return', Promise.reject('Auth data invalid.'));
 
-              case 28:
+              case 21:
               case 'end':
                 return _context4.stop();
             }
           }
-        }, _callee4, this, [[5, 20], [9, 15]]);
+        }, _callee4, this, [[5, 13]]);
       }));
 
       function refreshCurrentUser() {
@@ -251,8 +229,8 @@ var ApiGuardian = function () {
   }, {
     key: 'getAccessToken',
     value: function getAccessToken() {
-      var authData = getAuthData();
-      return authData && authData.access_token ? authData.accessToken : null;
+      var authData = this.getAuthData();
+      return authData && authData.access_token ? authData.access_token : null;
     }
   }, {
     key: 'clearCurrentUser',
@@ -267,7 +245,7 @@ var ApiGuardian = function () {
   }, {
     key: 'currentUser',
     get: function get() {
-      return Object.assign({}, __currentUser);
+      return __currentUser ? Object.assign({}, __currentUser) : null;
     }
   }]);
 
@@ -296,17 +274,18 @@ function __initLocalStorage() {
 }
 
 function __getLocalStorage() {
-  return localStorage.getItem(this.config.localStorageKey);
+  var authData = localStorage.getItem(this.config.localStorageKey);
+  return authData ? JSON.parse(authData) : null;
 }
 
 function __resetLocalStorage() {
   localStorage.setItem(this.config.localStorageKey, JSON.stringify({
-    accessToken: null
+    authData: null
   }));
 }
 
 function __updateLocalStorage(key, value) {
-  __initLocalStorage.call(this)();
+  __initLocalStorage.call(this);
   var authData = __getLocalStorage.call(this);
 
   authData[key] = value;
@@ -315,7 +294,7 @@ function __updateLocalStorage(key, value) {
 }
 
 function __processAuthData(authData) {
-  __updateLocalStorage.call(this, 'authData', data);
+  __updateLocalStorage.call(this, 'authData', authData);
   _http2.default.setAccessToken(this.getAccessToken());
 }
 
@@ -323,7 +302,7 @@ function __buildCurrentUser(tokenData, userData) {
   __currentUser = {
     id: tokenData.user.id,
     permissions: tokenData.permissions,
-    attributes: userData.data.data.attributes,
+    attributes: userData.data.attributes,
     isGuest: function isGuest() {
       // TODO: This needs to be built from API data
       return false;

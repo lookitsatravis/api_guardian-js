@@ -24,6 +24,15 @@ var UrlUtils = function () {
         throw new _errors.ValidationError('apiUrl and loginUrl are required!');
       }
     }
+  }, {
+    key: 'buildUserUrl',
+    value: function buildUserUrl(apiUrl, userUrl, userId) {
+      if (apiUrl && userUrl && userId) {
+        return apiUrl + '/' + userUrl.replace(/:id/, userId);
+      } else {
+        throw new _errors.ValidationError('apiUrl, userUrl, and userId are required!');
+      }
+    }
   }]);
 
   return UrlUtils;
