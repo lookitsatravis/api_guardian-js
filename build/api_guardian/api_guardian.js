@@ -16,6 +16,10 @@ var _http = require('./io/http');
 
 var _http2 = _interopRequireDefault(_http);
 
+var _storage = require('./storage');
+
+var _storage2 = _interopRequireDefault(_storage);
+
 var _utils = require('./utils/utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -285,12 +289,12 @@ function __initLocalStorage() {
 }
 
 function __getLocalStorage() {
-  var authData = localStorage.getItem(this.config.localStorageKey);
+  var authData = _storage2.default.getItem(this.config.localStorageKey);
   return authData ? JSON.parse(authData) : null;
 }
 
 function __resetLocalStorage() {
-  localStorage.setItem(this.config.localStorageKey, JSON.stringify({
+  _storage2.default.setItem(this.config.localStorageKey, JSON.stringify({
     authData: null
   }));
 }
@@ -301,7 +305,7 @@ function __updateLocalStorage(key, value) {
 
   authData[key] = value;
 
-  localStorage.setItem(this.config.localStorageKey, JSON.stringify(authData));
+  _storage2.default.setItem(this.config.localStorageKey, JSON.stringify(authData));
 }
 
 function __processAuthData(authData) {

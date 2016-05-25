@@ -26,6 +26,7 @@ var config = {
       __DEV__: DEVELOPMENT,
       __PRODUCTION__: PRODUCTION
     }),
+    new webpack.optimize.UglifyJsPlugin()
   ]
 };
 
