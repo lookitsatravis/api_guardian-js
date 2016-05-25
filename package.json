@@ -41,8 +41,8 @@
   "dependencies": {
     "babel-polyfill": "^6.8.0",
     "es6-promise": "^3.2.1",
-    "fetch": "^1.0.1",
     "jwt-decode": "^2.0.1",
-    "lodash.camelcase": "^4.1.1"
+    "lodash.camelcase": "^4.1.1",
+    "whatwg-fetch": "^1.0.0"
   }
 }
