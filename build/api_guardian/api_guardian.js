@@ -35,6 +35,7 @@ var __defaultConfig = {
   localStorageKey: constants.DEFAULT_LOCAL_STORAGE_KEY,
   apiUrl: 'http://localhost:3000',
   loginUrl: 'auth/access/token',
+  resetPasswordUrl: 'auth/reset-password',
   userUrl: 'users/:id'
 };
 var __currentUser = null;
@@ -221,6 +222,49 @@ var ApiGuardian = function () {
       this.clearCurrentUser();
       return Promise.resolve();
     }
+  }, {
+    key: 'resetPassword',
+    value: function () {
+      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee5(email) {
+        var resetPasswordUrl, response;
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                resetPasswordUrl = _utils.UrlUtils.buildLoginUrl(this.config.apiUrl, this.config.resetPasswordUrl);
+
+
+                request.body = {
+                  email: email
+                };
+
+                _context5.prev = 2;
+                _context5.next = 5;
+                return _http2.default.postJson(loginUrl, request, true);
+
+              case 5:
+                response = _context5.sent;
+                return _context5.abrupt('return', Promise.resolve(response));
+
+              case 9:
+                _context5.prev = 9;
+                _context5.t0 = _context5['catch'](2);
+                return _context5.abrupt('return', Promise.reject(_context5.t0));
+
+              case 12:
+              case 'end':
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this, [[2, 9]]);
+      }));
+
+      function resetPassword(_x8) {
+        return ref.apply(this, arguments);
+      }
+
+      return resetPassword;
+    }()
   }, {
     key: 'getAuthData',
     value: function getAuthData() {

@@ -12,6 +12,7 @@ describe('ApiGuardian', () => {
     apiUrl: 'http://localhost:3000',
     localStorageKey: 'ag',
     loginUrl: 'auth/access/token',
+    resetPasswordUrl: 'auth/reset-password',
     userUrl: 'users/:id'
   };
 
@@ -88,6 +89,13 @@ describe('ApiGuardian', () => {
   describe("#login", () => {
     it('returns a Promise', () => {
       let result = api_guardian.login();
+      result.should.be.an.instanceof(Promise);
+    });
+  });
+
+  describe("#resetPassword", () => {
+    it('returns a Promise', () => {
+      let result = api_guardian.resetPassword();
       result.should.be.an.instanceof(Promise);
     });
   });

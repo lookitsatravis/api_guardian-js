@@ -21,6 +21,20 @@ describe('Utils', () => {
         result.should.equal('https://localhost:3000/login');
       });
     });
+
+    describe('.buildResetPasswordUrl', () => {
+      it('should fail if arguments cannot be validated', () => {
+        let validationError = /apiUrl and resetPasswordUrl are required!/;
+        (() => UrlUtils.buildResetPasswordUrl('', '')).should.throw(validationError);
+        (() => UrlUtils.buildResetPasswordUrl()).should.throw(validationError);
+        (() => UrlUtils.buildResetPasswordUrl(null, false)).should.throw(validationError);
+      });
+
+      it('should return build URL if arguments validate', () => {
+        let result = UrlUtils.buildResetPasswordUrl('https://localhost:3000', 'reset');
+        result.should.equal('https://localhost:3000/reset');
+      });
+    });
   });
 
   describe('TokenUtils', () => {
