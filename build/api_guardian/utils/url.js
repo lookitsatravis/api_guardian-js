@@ -34,6 +34,15 @@ var UrlUtils = function () {
       }
     }
   }, {
+    key: 'buildCompleteResetPasswordUrl',
+    value: function buildCompleteResetPasswordUrl(apiUrl, completeResetPasswordUrl) {
+      if (apiUrl && completeResetPasswordUrl) {
+        return apiUrl + '/' + completeResetPasswordUrl;
+      } else {
+        throw new _errors.ValidationError('apiUrl and completeResetPasswordUrl are required!');
+      }
+    }
+  }, {
     key: 'buildUserUrl',
     value: function buildUserUrl(apiUrl, userUrl, userId) {
       if (apiUrl && userUrl && userId) {

@@ -35,6 +35,20 @@ describe('Utils', () => {
         result.should.equal('https://localhost:3000/reset');
       });
     });
+
+    describe('.buildCompleteResetPasswordUrl', () => {
+      it('should fail if arguments cannot be validated', () => {
+        let validationError = /apiUrl and completeResetPasswordUrl are required!/;
+        (() => UrlUtils.buildCompleteResetPasswordUrl('', '')).should.throw(validationError);
+        (() => UrlUtils.buildCompleteResetPasswordUrl()).should.throw(validationError);
+        (() => UrlUtils.buildCompleteResetPasswordUrl(null, false)).should.throw(validationError);
+      });
+
+      it('should return build URL if arguments validate', () => {
+        let result = UrlUtils.buildCompleteResetPasswordUrl('https://localhost:3000', 'complete-reset');
+        result.should.equal('https://localhost:3000/complete-reset');
+      });
+    });
   });
 
   describe('TokenUtils', () => {

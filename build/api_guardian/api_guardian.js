@@ -36,6 +36,7 @@ var __defaultConfig = {
   apiUrl: 'http://localhost:3000',
   loginUrl: 'auth/access/token',
   resetPasswordUrl: 'auth/reset-password',
+  completeResetPasswordUrl: 'auth/complete-reset-password',
   userUrl: 'users/:id'
 };
 var __currentUser = null;
@@ -232,7 +233,7 @@ var ApiGuardian = function () {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                resetPasswordUrl = _utils.UrlUtils.buildLoginUrl(this.config.apiUrl, this.config.resetPasswordUrl);
+                resetPasswordUrl = _utils.UrlUtils.buildResetPasswordUrl(this.config.apiUrl, this.config.resetPasswordUrl);
 
 
                 request.body = {
@@ -265,6 +266,48 @@ var ApiGuardian = function () {
       }
 
       return resetPassword;
+    }()
+  }, {
+    key: 'completeResetPassword',
+    value: function () {
+      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee6(body) {
+        var request = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+        var completeResetPasswordUrl, response;
+        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                completeResetPasswordUrl = _utils.UrlUtils.buildCompleteResetPasswordUrl(this.config.apiUrl, this.config.completeResetPasswordUrl);
+
+
+                request.body = body;
+
+                _context6.prev = 2;
+                _context6.next = 5;
+                return _http2.default.postJson(completeResetPasswordUrl, request, true);
+
+              case 5:
+                response = _context6.sent;
+                return _context6.abrupt('return', Promise.resolve(response));
+
+              case 9:
+                _context6.prev = 9;
+                _context6.t0 = _context6['catch'](2);
+                return _context6.abrupt('return', Promise.reject(_context6.t0));
+
+              case 12:
+              case 'end':
+                return _context6.stop();
+            }
+          }
+        }, _callee6, this, [[2, 9]]);
+      }));
+
+      function completeResetPassword(_x11, _x12) {
+        return ref.apply(this, arguments);
+      }
+
+      return completeResetPassword;
     }()
   }, {
     key: 'getAuthData',
