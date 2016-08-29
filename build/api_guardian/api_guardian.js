@@ -241,7 +241,7 @@ var ApiGuardian = function () {
 
                 _context5.prev = 2;
                 _context5.next = 5;
-                return _http2.default.postJson(loginUrl, request, true);
+                return _http2.default.postJson(resetPasswordUrl, request, true);
 
               case 5:
                 response = _context5.sent;
