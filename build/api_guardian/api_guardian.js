@@ -226,6 +226,7 @@ var ApiGuardian = function () {
     key: 'resetPassword',
     value: function () {
       var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee5(email) {
+        var request = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
         var resetPasswordUrl, response;
         return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
@@ -259,7 +260,7 @@ var ApiGuardian = function () {
         }, _callee5, this, [[2, 9]]);
       }));
 
-      function resetPassword(_x8) {
+      function resetPassword(_x8, _x9) {
         return ref.apply(this, arguments);
       }
 
