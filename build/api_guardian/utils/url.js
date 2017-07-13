@@ -34,6 +34,15 @@ var UrlUtils = function () {
       }
     }
   }, {
+    key: 'buildRegisterUrl',
+    value: function buildRegisterUrl(apiUrl, registerUrl) {
+      if (apiUrl && registerUrl) {
+        return apiUrl + '/' + registerUrl;
+      } else {
+        throw new _errors.ValidationError('apiUrl and registerUrl are required!');
+      }
+    }
+  }, {
     key: 'buildCompleteResetPasswordUrl',
     value: function buildCompleteResetPasswordUrl(apiUrl, completeResetPasswordUrl) {
       if (apiUrl && completeResetPasswordUrl) {

@@ -41,7 +41,7 @@ var ApiGuardianError = exports.ApiGuardianError = function (_extendableBuiltin2)
   function ApiGuardianError(message) {
     _classCallCheck(this, ApiGuardianError);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ApiGuardianError).call(this, message));
+    var _this = _possibleConstructorReturn(this, (ApiGuardianError.__proto__ || Object.getPrototypeOf(ApiGuardianError)).call(this, message));
 
     _this.name = _this.constructor.name;
     _this.message = message;
@@ -62,7 +62,7 @@ var ValidationError = exports.ValidationError = function (_ApiGuardianError) {
   function ValidationError(m) {
     _classCallCheck(this, ValidationError);
 
-    return _possibleConstructorReturn(this, Object.getPrototypeOf(ValidationError).call(this, m));
+    return _possibleConstructorReturn(this, (ValidationError.__proto__ || Object.getPrototypeOf(ValidationError)).call(this, m));
   }
 
   return ValidationError;
