@@ -1,5 +1,5 @@
 {
-  "name": "@ahsquared/api_guardian-js",
+  "name": "api_guardian-js",
   "version": "1.1.3",
   "description": "JavaScript library for interacting with ApiGurdian-enabled apps",
   "main": "build/index.js",
