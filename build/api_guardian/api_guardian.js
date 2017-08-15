@@ -220,7 +220,7 @@ var ApiGuardian = function () {
     key: 'refreshSession',
     value: function () {
       var _ref5 = _asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
-        var sessionData, expired, params, refreshUrl, response, user;
+        var sessionData, params, refreshUrl, response, user;
         return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
@@ -228,60 +228,50 @@ var ApiGuardian = function () {
                 sessionData = this.getAuthData();
 
                 if (!(sessionData && sessionData.refresh_token)) {
-                  _context5.next = 23;
+                  _context5.next = 20;
                   break;
                 }
 
-                expired = (d.getTime() / 1000 | 0) > sessionData.created_at + sessionData.expires_in;
-
-                if (expired) {
-                  _context5.next = 5;
-                  break;
-                }
-
-                return _context5.abrupt('return', Promise.resolve());
-
-              case 5:
                 params = {
                   grant_type: 'refresh_token',
                   refresh_token: sessionData.refresh_token
                 };
                 refreshUrl = _utils.UrlUtils.buildLoginUrl(this.config.apiUrl, this.config.loginUrl);
-                _context5.prev = 7;
-                _context5.next = 10;
+                _context5.prev = 4;
+                _context5.next = 7;
                 return _http2.default.postJson(refreshUrl, params);
 
-              case 10:
+              case 7:
                 response = _context5.sent;
 
                 __processAuthData.call(this, response);
-                _context5.next = 14;
+                _context5.next = 11;
                 return this.refreshCurrentUser();
 
-              case 14:
+              case 11:
                 user = _context5.sent;
-                return _context5.abrupt('return', Promise.resolve());
+                return _context5.abrupt('return', Promise.resolve(this.getAuthData()));
 
-              case 18:
-                _context5.prev = 18;
-                _context5.t0 = _context5['catch'](7);
+              case 15:
+                _context5.prev = 15;
+                _context5.t0 = _context5['catch'](4);
                 return _context5.abrupt('return', Promise.reject(_context5.t0));
 
-              case 21:
-                _context5.next = 26;
+              case 18:
+                _context5.next = 23;
                 break;
 
-              case 23:
+              case 20:
                 this.clearAuthData();
                 this.clearCurrentUser();
                 return _context5.abrupt('return', Promise.reject('Session has expired.'));
 
-              case 26:
+              case 23:
               case 'end':
                 return _context5.stop();
             }
           }
-        }, _callee5, this, [[7, 18]]);
+        }, _callee5, this, [[4, 15]]);
       }));
 
       function refreshSession() {
@@ -433,54 +423,15 @@ var ApiGuardian = function () {
     }()
   }, {
     key: 'getAuthData',
-    value: function () {
-      var _ref9 = _asyncToGenerator(regeneratorRuntime.mark(function _callee9() {
-        var ls, refresh;
-        return regeneratorRuntime.wrap(function _callee9$(_context9) {
-          while (1) {
-            switch (_context9.prev = _context9.next) {
-              case 0:
-                ls = __getLocalStorage.call(this);
+    value: function getAuthData() {
+      var ls = __getLocalStorage.call(this);
 
-                if (!(ls && ls.authData)) {
-                  _context9.next = 14;
-                  break;
-                }
-
-                _context9.prev = 2;
-                _context9.next = 5;
-                return refreshSession();
-
-              case 5:
-                refresh = _context9.sent;
-                return _context9.abrupt('return', Promise.resolve(ls.authData));
-
-              case 9:
-                _context9.prev = 9;
-                _context9.t0 = _context9['catch'](2);
-                return _context9.abrupt('return', Promise.reject(_context9.t0));
-
-              case 12:
-                _context9.next = 15;
-                break;
-
-              case 14:
-                return _context9.abrupt('return', null);
-
-              case 15:
-              case 'end':
-                return _context9.stop();
-            }
-          }
-        }, _callee9, this, [[2, 9]]);
-      }));
-
-      function getAuthData() {
-        return _ref9.apply(this, arguments);
+      if (ls && ls.authData) {
+        return ls.authData;
+      } else {
+        return null;
       }
-
-      return getAuthData;
-    }()
+    }
   }, {
     key: 'clearAuthData',
     value: function clearAuthData() {
