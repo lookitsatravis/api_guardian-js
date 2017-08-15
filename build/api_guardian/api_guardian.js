@@ -217,14 +217,73 @@ var ApiGuardian = function () {
       return refreshCurrentUser;
     }()
   }, {
-    key: 'register',
+    key: 'refreshSession',
     value: function () {
-      var _ref5 = _asyncToGenerator(regeneratorRuntime.mark(function _callee5(email, password) {
-        var request = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-        var registerUrl, response;
+      var _ref5 = _asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
+        var sessionData, params, refreshUrl, response;
         return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
+              case 0:
+                sessionData = this.getAuthData();
+
+                if (!(sessionData && sessionData.refresh_token)) {
+                  _context5.next = 17;
+                  break;
+                }
+
+                params = {
+                  grant_type: 'refresh_token',
+                  refresh_token: sessionData.refresh_token
+                };
+                refreshUrl = _utils.UrlUtils.buildLoginUrl(this.config.apiUrl, this.config.loginUrl);
+                _context5.prev = 4;
+                _context5.next = 7;
+                return _http2.default.postJson(refreshUrl, params);
+
+              case 7:
+                response = _context5.sent;
+
+                __processAuthData.call(this, response);
+                return _context5.abrupt('return', this.refreshCurrentUser());
+
+              case 12:
+                _context5.prev = 12;
+                _context5.t0 = _context5['catch'](4);
+                return _context5.abrupt('return', Promise.reject(_context5.t0));
+
+              case 15:
+                _context5.next = 20;
+                break;
+
+              case 17:
+                this.clearAuthData();
+                this.clearCurrentUser();
+                return _context5.abrupt('return', Promise.reject('Session has expired.'));
+
+              case 20:
+              case 'end':
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this, [[4, 12]]);
+      }));
+
+      function refreshSession() {
+        return _ref5.apply(this, arguments);
+      }
+
+      return refreshSession;
+    }()
+  }, {
+    key: 'register',
+    value: function () {
+      var _ref6 = _asyncToGenerator(regeneratorRuntime.mark(function _callee6(email, password) {
+        var request = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+        var registerUrl, response;
+        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
               case 0:
                 registerUrl = _utils.UrlUtils.buildRegisterUrl(this.config.apiUrl, this.config.registerUrl);
 
@@ -236,61 +295,9 @@ var ApiGuardian = function () {
                   "password_confirmation": password
                 };
 
-                _context5.prev = 2;
-                _context5.next = 5;
-                return _http2.default.postJson(registerUrl, request, true);
-
-              case 5:
-                response = _context5.sent;
-                return _context5.abrupt('return', Promise.resolve(response));
-
-              case 9:
-                _context5.prev = 9;
-                _context5.t0 = _context5['catch'](2);
-                return _context5.abrupt('return', Promise.reject(_context5.t0));
-
-              case 12:
-              case 'end':
-                return _context5.stop();
-            }
-          }
-        }, _callee5, this, [[2, 9]]);
-      }));
-
-      function register(_x7, _x8) {
-        return _ref5.apply(this, arguments);
-      }
-
-      return register;
-    }()
-  }, {
-    key: 'logout',
-    value: function logout() {
-      // TODO: Ddigits logout
-      this.clearAuthData();
-      this.clearCurrentUser();
-      return Promise.resolve();
-    }
-  }, {
-    key: 'resetPassword',
-    value: function () {
-      var _ref6 = _asyncToGenerator(regeneratorRuntime.mark(function _callee6(email) {
-        var request = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-        var resetPasswordUrl, response;
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                resetPasswordUrl = _utils.UrlUtils.buildResetPasswordUrl(this.config.apiUrl, this.config.resetPasswordUrl);
-
-
-                request.body = {
-                  email: email
-                };
-
                 _context6.prev = 2;
                 _context6.next = 5;
-                return _http2.default.postJson(resetPasswordUrl, request, true);
+                return _http2.default.postJson(registerUrl, request, true);
 
               case 5:
                 response = _context6.sent;
@@ -309,30 +316,40 @@ var ApiGuardian = function () {
         }, _callee6, this, [[2, 9]]);
       }));
 
-      function resetPassword(_x10) {
+      function register(_x7, _x8) {
         return _ref6.apply(this, arguments);
       }
 
-      return resetPassword;
+      return register;
     }()
   }, {
-    key: 'completeResetPassword',
+    key: 'logout',
+    value: function logout() {
+      // TODO: Ddigits logout
+      this.clearAuthData();
+      this.clearCurrentUser();
+      return Promise.resolve();
+    }
+  }, {
+    key: 'resetPassword',
     value: function () {
-      var _ref7 = _asyncToGenerator(regeneratorRuntime.mark(function _callee7(body) {
+      var _ref7 = _asyncToGenerator(regeneratorRuntime.mark(function _callee7(email) {
         var request = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-        var completeResetPasswordUrl, response;
+        var resetPasswordUrl, response;
         return regeneratorRuntime.wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
-                completeResetPasswordUrl = _utils.UrlUtils.buildCompleteResetPasswordUrl(this.config.apiUrl, this.config.completeResetPasswordUrl);
+                resetPasswordUrl = _utils.UrlUtils.buildResetPasswordUrl(this.config.apiUrl, this.config.resetPasswordUrl);
 
 
-                request.body = body;
+                request.body = {
+                  email: email
+                };
 
                 _context7.prev = 2;
                 _context7.next = 5;
-                return _http2.default.postJson(completeResetPasswordUrl, request, true);
+                return _http2.default.postJson(resetPasswordUrl, request, true);
 
               case 5:
                 response = _context7.sent;
@@ -351,8 +368,50 @@ var ApiGuardian = function () {
         }, _callee7, this, [[2, 9]]);
       }));
 
-      function completeResetPassword(_x12) {
+      function resetPassword(_x10) {
         return _ref7.apply(this, arguments);
+      }
+
+      return resetPassword;
+    }()
+  }, {
+    key: 'completeResetPassword',
+    value: function () {
+      var _ref8 = _asyncToGenerator(regeneratorRuntime.mark(function _callee8(body) {
+        var request = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var completeResetPasswordUrl, response;
+        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                completeResetPasswordUrl = _utils.UrlUtils.buildCompleteResetPasswordUrl(this.config.apiUrl, this.config.completeResetPasswordUrl);
+
+
+                request.body = body;
+
+                _context8.prev = 2;
+                _context8.next = 5;
+                return _http2.default.postJson(completeResetPasswordUrl, request, true);
+
+              case 5:
+                response = _context8.sent;
+                return _context8.abrupt('return', Promise.resolve(response));
+
+              case 9:
+                _context8.prev = 9;
+                _context8.t0 = _context8['catch'](2);
+                return _context8.abrupt('return', Promise.reject(_context8.t0));
+
+              case 12:
+              case 'end':
+                return _context8.stop();
+            }
+          }
+        }, _callee8, this, [[2, 9]]);
+      }));
+
+      function completeResetPassword(_x12) {
+        return _ref8.apply(this, arguments);
       }
 
       return completeResetPassword;
