@@ -26,7 +26,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -35,15 +35,16 @@ var __defaultConfig = {
   localStorageKey: constants.DEFAULT_LOCAL_STORAGE_KEY,
   apiUrl: 'http://localhost:3000',
   loginUrl: 'auth/access/token',
+  registerUrl: 'auth/register',
   resetPasswordUrl: 'auth/reset-password',
   completeResetPasswordUrl: 'auth/complete-reset-password',
-  userUrl: 'users/:id'
+  userUrl: 'auth/users/:id'
 };
 var __currentUser = null;
 
 var ApiGuardian = function () {
   function ApiGuardian() {
-    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, ApiGuardian);
 
@@ -61,7 +62,7 @@ var ApiGuardian = function () {
   }, {
     key: 'loginWithEmail',
     value: function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(email, password) {
+      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(email, password) {
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -81,7 +82,7 @@ var ApiGuardian = function () {
       }));
 
       function loginWithEmail(_x2, _x3) {
-        return ref.apply(this, arguments);
+        return _ref.apply(this, arguments);
       }
 
       return loginWithEmail;
@@ -89,7 +90,7 @@ var ApiGuardian = function () {
   }, {
     key: 'loginWithFacebook',
     value: function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(accessToken) {
+      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(accessToken) {
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -109,7 +110,7 @@ var ApiGuardian = function () {
       }));
 
       function loginWithFacebook(_x4) {
-        return ref.apply(this, arguments);
+        return _ref2.apply(this, arguments);
       }
 
       return loginWithFacebook;
@@ -117,8 +118,8 @@ var ApiGuardian = function () {
   }, {
     key: 'login',
     value: function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(body) {
-        var request = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+      var _ref3 = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(body) {
+        var request = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
         var loginUrl, response;
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
@@ -152,8 +153,8 @@ var ApiGuardian = function () {
         }, _callee3, this, [[2, 10]]);
       }));
 
-      function login(_x5, _x6) {
-        return ref.apply(this, arguments);
+      function login(_x5) {
+        return _ref3.apply(this, arguments);
       }
 
       return login;
@@ -161,7 +162,7 @@ var ApiGuardian = function () {
   }, {
     key: 'refreshCurrentUser',
     value: function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
+      var _ref4 = _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
         var authData, accessToken, tokenData, userUrl, response;
         return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
@@ -210,81 +211,98 @@ var ApiGuardian = function () {
       }));
 
       function refreshCurrentUser() {
-        return ref.apply(this, arguments);
+        return _ref4.apply(this, arguments);
       }
 
       return refreshCurrentUser;
     }()
   }, {
-    key: 'logout',
-    value: function logout() {
-      // TODO: Ddigits logout
-      this.clearAuthData();
-      this.clearCurrentUser();
-      return Promise.resolve();
-    }
-  }, {
-    key: 'resetPassword',
+    key: 'refreshSession',
     value: function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee5(email) {
-        var request = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-        var resetPasswordUrl, response;
+      var _ref5 = _asyncToGenerator(regeneratorRuntime.mark(function _callee5() {
+        var sessionData, params, refreshUrl, response, user;
         return regeneratorRuntime.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                resetPasswordUrl = _utils.UrlUtils.buildResetPasswordUrl(this.config.apiUrl, this.config.resetPasswordUrl);
+                sessionData = this.getAuthData();
 
+                if (!(sessionData && sessionData.refresh_token)) {
+                  _context5.next = 20;
+                  break;
+                }
 
-                request.body = {
-                  email: email
+                params = {
+                  grant_type: 'refresh_token',
+                  refresh_token: sessionData.refresh_token
                 };
+                refreshUrl = _utils.UrlUtils.buildLoginUrl(this.config.apiUrl, this.config.loginUrl);
+                _context5.prev = 4;
+                _context5.next = 7;
+                return _http2.default.postJson(refreshUrl, params);
 
-                _context5.prev = 2;
-                _context5.next = 5;
-                return _http2.default.postJson(resetPasswordUrl, request, true);
-
-              case 5:
+              case 7:
                 response = _context5.sent;
-                return _context5.abrupt('return', Promise.resolve(response));
 
-              case 9:
-                _context5.prev = 9;
-                _context5.t0 = _context5['catch'](2);
+                __processAuthData.call(this, response);
+                _context5.next = 11;
+                return this.refreshCurrentUser();
+
+              case 11:
+                user = _context5.sent;
+                return _context5.abrupt('return', Promise.resolve(this.getAuthData()));
+
+              case 15:
+                _context5.prev = 15;
+                _context5.t0 = _context5['catch'](4);
                 return _context5.abrupt('return', Promise.reject(_context5.t0));
 
-              case 12:
+              case 18:
+                _context5.next = 23;
+                break;
+
+              case 20:
+                this.clearAuthData();
+                this.clearCurrentUser();
+                return _context5.abrupt('return', Promise.reject('Session has expired.'));
+
+              case 23:
               case 'end':
                 return _context5.stop();
             }
           }
-        }, _callee5, this, [[2, 9]]);
+        }, _callee5, this, [[4, 15]]);
       }));
 
-      function resetPassword(_x8, _x9) {
-        return ref.apply(this, arguments);
+      function refreshSession() {
+        return _ref5.apply(this, arguments);
       }
 
-      return resetPassword;
+      return refreshSession;
     }()
   }, {
-    key: 'completeResetPassword',
+    key: 'register',
     value: function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee6(body) {
-        var request = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-        var completeResetPasswordUrl, response;
+      var _ref6 = _asyncToGenerator(regeneratorRuntime.mark(function _callee6(email, password) {
+        var request = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+        var registerUrl, response;
         return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
-                completeResetPasswordUrl = _utils.UrlUtils.buildCompleteResetPasswordUrl(this.config.apiUrl, this.config.completeResetPasswordUrl);
+                registerUrl = _utils.UrlUtils.buildRegisterUrl(this.config.apiUrl, this.config.registerUrl);
 
 
-                request.body = body;
+                request.body = {
+                  "type": "email",
+                  "email": email,
+                  "password": password,
+                  "password_confirmation": password
+                };
 
                 _context6.prev = 2;
                 _context6.next = 5;
-                return _http2.default.postJson(completeResetPasswordUrl, request, true);
+                return _http2.default.postJson(registerUrl, request, true);
 
               case 5:
                 response = _context6.sent;
@@ -303,8 +321,102 @@ var ApiGuardian = function () {
         }, _callee6, this, [[2, 9]]);
       }));
 
-      function completeResetPassword(_x11, _x12) {
-        return ref.apply(this, arguments);
+      function register(_x7, _x8) {
+        return _ref6.apply(this, arguments);
+      }
+
+      return register;
+    }()
+  }, {
+    key: 'logout',
+    value: function logout() {
+      // TODO: Ddigits logout
+      this.clearAuthData();
+      this.clearCurrentUser();
+      return Promise.resolve();
+    }
+  }, {
+    key: 'resetPassword',
+    value: function () {
+      var _ref7 = _asyncToGenerator(regeneratorRuntime.mark(function _callee7(email) {
+        var request = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var resetPasswordUrl, response;
+        return regeneratorRuntime.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                resetPasswordUrl = _utils.UrlUtils.buildResetPasswordUrl(this.config.apiUrl, this.config.resetPasswordUrl);
+
+
+                request.body = {
+                  email: email
+                };
+
+                _context7.prev = 2;
+                _context7.next = 5;
+                return _http2.default.postJson(resetPasswordUrl, request, true);
+
+              case 5:
+                response = _context7.sent;
+                return _context7.abrupt('return', Promise.resolve(response));
+
+              case 9:
+                _context7.prev = 9;
+                _context7.t0 = _context7['catch'](2);
+                return _context7.abrupt('return', Promise.reject(_context7.t0));
+
+              case 12:
+              case 'end':
+                return _context7.stop();
+            }
+          }
+        }, _callee7, this, [[2, 9]]);
+      }));
+
+      function resetPassword(_x10) {
+        return _ref7.apply(this, arguments);
+      }
+
+      return resetPassword;
+    }()
+  }, {
+    key: 'completeResetPassword',
+    value: function () {
+      var _ref8 = _asyncToGenerator(regeneratorRuntime.mark(function _callee8(body) {
+        var request = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var completeResetPasswordUrl, response;
+        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                completeResetPasswordUrl = _utils.UrlUtils.buildCompleteResetPasswordUrl(this.config.apiUrl, this.config.completeResetPasswordUrl);
+
+
+                request.body = body;
+
+                _context8.prev = 2;
+                _context8.next = 5;
+                return _http2.default.postJson(completeResetPasswordUrl, request, true);
+
+              case 5:
+                response = _context8.sent;
+                return _context8.abrupt('return', Promise.resolve(response));
+
+              case 9:
+                _context8.prev = 9;
+                _context8.t0 = _context8['catch'](2);
+                return _context8.abrupt('return', Promise.reject(_context8.t0));
+
+              case 12:
+              case 'end':
+                return _context8.stop();
+            }
+          }
+        }, _callee8, this, [[2, 9]]);
+      }));
+
+      function completeResetPassword(_x12) {
+        return _ref8.apply(this, arguments);
       }
 
       return completeResetPassword;
