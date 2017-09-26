@@ -1,6 +1,6 @@
 {
   "name": "api_guardian-js",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "JavaScript library for interacting with ApiGurdian-enabled apps",
   "main": "lib/index.js",
   "scripts": {
