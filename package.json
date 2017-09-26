@@ -42,7 +42,6 @@
     "webpack": "^3.6.0"
   },
   "dependencies": {
-    "babel-polyfill": "^6.26.0",
     "es6-promise": "^4.1.1",
     "jwt-decode": "^2.2.0",
     "lodash.camelcase": "^4.3.0",
