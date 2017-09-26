@@ -93,6 +93,21 @@ class ApiGuardian {
     }
   }
 
+  async refreshSession() {
+    let refreshToken = this.getRefreshToken();
+
+    if (refreshToken) {
+      return this.login({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+      });
+    } else {
+      this.clearAuthData();
+      this.clearCurrentUser();
+      return Promise.reject('Auth data invalid.');
+    }
+  }
+
   logout() {
     this.clearAuthData();
     this.clearCurrentUser();
