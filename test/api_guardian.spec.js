@@ -1,8 +1,8 @@
 import chai from 'chai';
 import chainAsPromised from 'chai-as-promised'
 import path from 'path';
-import * as constants from '../lib/api_guardian/constants';
-import ApiGuardian from '../lib/api_guardian/api_guardian';
+import * as constants from '../src/api_guardian/constants';
+import ApiGuardian from '../src/api_guardian/api_guardian';
 
 chai.should();
 chai.use(chainAsPromised);

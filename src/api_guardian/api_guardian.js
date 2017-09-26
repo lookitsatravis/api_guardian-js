@@ -109,10 +109,12 @@ class ApiGuardian {
     }
   }
 
-  async completeResetPassword(body, request = {}) {
+  async completeResetPassword(email, request = {}) {
     let completeResetPasswordUrl = UrlUtils.buildCompleteResetPasswordUrl(this.config.apiUrl, this.config.completeResetPasswordUrl);
 
-    request.body = body;
+    request.body = {
+      email: email
+    };
 
     try {
       let response = await http.postJson(completeResetPasswordUrl, request, true);

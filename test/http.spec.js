@@ -1,6 +1,6 @@
 import chai from 'chai';
 import * as support from './support';
-import http from '../lib/api_guardian/io/http';
+import http from '../src/api_guardian/io/http';
 
 let should = chai.should();
 

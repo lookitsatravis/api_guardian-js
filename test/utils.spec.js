@@ -1,8 +1,8 @@
 import chai from 'chai';
 import * as support from './support';
-import UrlUtils from '../lib/api_guardian/utils/url';
-import TokenUtils from '../lib/api_guardian/utils/token';
-import StrUtils from '../lib/api_guardian/utils/str';
+import UrlUtils from '../src/api_guardian/utils/url';
+import TokenUtils from '../src/api_guardian/utils/token';
+import StrUtils from '../src/api_guardian/utils/str';
 
 chai.should();
 

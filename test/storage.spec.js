@@ -1,6 +1,6 @@
 import chai from 'chai';
 import * as support from './support';
-import storage from '../lib/api_guardian/storage';
+import storage from '../src/api_guardian/storage';
 
 let expect = chai.expect;
 let should = chai.should();
