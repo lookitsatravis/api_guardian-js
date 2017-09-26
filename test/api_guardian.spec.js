@@ -115,4 +115,11 @@ describe('ApiGuardian', () => {
       result.should.be.an.instanceof(Promise);
     });
   });
+
+  describe("#completeResetPassword", () => {
+    it('returns a Promise', () => {
+      let result = api_guardian.completeResetPassword();
+      result.should.be.an.instanceof(Promise);
+    });
+  });
 });
