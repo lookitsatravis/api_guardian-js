@@ -11,7 +11,7 @@ let __defaultConfig = {
   registerUrl: 'auth/register',
   resetPasswordUrl: 'auth/reset-password',
   completeResetPasswordUrl: 'auth/complete-reset-password',
-  userUrl: 'users/:id'
+  userUrl: 'auth/users/:id'
 };
 let __currentUser = null;
 

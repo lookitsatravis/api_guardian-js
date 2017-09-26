@@ -15,7 +15,7 @@ describe('ApiGuardian', () => {
     registerUrl: 'auth/register',
     resetPasswordUrl: 'auth/reset-password',
     completeResetPasswordUrl: 'auth/complete-reset-password',
-    userUrl: 'users/:id'
+    userUrl: 'auth/users/:id'
   };
 
   let api_guardian;
