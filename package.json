@@ -2,11 +2,11 @@
   "name": "api_guardian-js",
   "version": "1.0.1",
   "description": "JavaScript library for interacting with ApiGurdian-enabled apps",
-  "main": "build/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "mocha --compilers js:babel-register -r mock-local-storage",
     "coverage": "babel-node ./node_modules/.bin/isparta cover _mocha",
-    "build": "babel src --out-dir build"
+    "build": "babel src --out-dir lib",
   },
   "repository": {
     "type": "git",
