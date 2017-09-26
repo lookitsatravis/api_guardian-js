@@ -84,16 +84,14 @@ class ApiGuardian {
         this::__buildCurrentUser(tokenData, response);
         return Promise.resolve(this.currentUser);
       } catch (error) {
-        return Promise.reject(error);
+        return this.refreshSession(error);
       }
     } else {
-      this.clearAuthData();
-      this.clearCurrentUser();
-      return Promise.reject('Auth data invalid.');
+      return this.refreshSession('Auth data invalid.');
     }
   }
 
-  async refreshSession() {
+  async refreshSession(originalError) {
     if (this._refreshRequest) {
       return this._refreshRequest;
     }
@@ -105,6 +103,9 @@ class ApiGuardian {
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
       })
+        .then(() => {}, () => {
+          return Promise.reject(originalError);
+        })
         .finally(() => {
           this._refreshRequest = null;
         });
