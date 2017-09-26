@@ -114,6 +114,24 @@ class ApiGuardian {
     return Promise.resolve();
   }
 
+  async register(email, password) {
+    let registerUrl = UrlUtils.buildRegisterUrl(this.config.apiUrl, this.config.registerUrl);
+
+    request.body = {
+      'type': 'email',
+      'email': email,
+      'password': password,
+      'password_confirmation': password,
+    };
+
+    try {
+      let response = await http.postJson(registerUrl, request, true);
+      return Promise.resolve(response);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
   async resetPassword(email, request = {}) {
     let resetPasswordUrl = UrlUtils.buildResetPasswordUrl(this.config.apiUrl, this.config.resetPasswordUrl);
 

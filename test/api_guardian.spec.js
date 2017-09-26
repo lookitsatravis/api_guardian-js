@@ -95,6 +95,13 @@ describe('ApiGuardian', () => {
     });
   });
 
+  describe("#register", () => {
+    it ('returns a Promise', () => {
+      let result = api_guardian.register();
+      result.should.be.an.instanceof(Promise);
+    });
+  });
+
   describe("#refreshSession", () => {
     it ('returns a Promise', () => {
       let result = api_guardian.register();
