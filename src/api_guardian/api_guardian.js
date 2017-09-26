@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import * as constants from './constants';
 import http from './io/http';
 import storage from './storage';
