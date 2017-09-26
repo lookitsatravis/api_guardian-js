@@ -142,6 +142,11 @@ class ApiGuardian {
     return authData && authData.access_token ? authData.access_token : null;
   }
 
+  getRefreshToken() {
+    let authData = this.getAuthData();
+    return authData && authData.refresh_token ? authData.refresh_token : null;
+  }
+
   clearCurrentUser() {
     __currentUser = null;
   }
