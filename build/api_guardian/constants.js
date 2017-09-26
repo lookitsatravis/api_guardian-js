@@ -4,9 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 var DEFAULT_LOCAL_STORAGE_KEY = exports.DEFAULT_LOCAL_STORAGE_KEY = 'ag';
-var DIGITS_URL_KEY = exports.DIGITS_URL_KEY = 'X-Auth-Service-Provider';
-var DIGITS_AUTH_HEADER_KEY = exports.DIGITS_AUTH_HEADER_KEY = 'X-Verify-Credentials-Authorization';
-
 var LOGIN_SUCCESS = exports.LOGIN_SUCCESS = 'ag:login:success';
 var LOGIN_FAILED = exports.LOGIN_FAILED = 'ag:login:failed';
 var LOGOUT_SUCCESS = exports.LOGOUT_SUCCESS = 'ag:logout:success';

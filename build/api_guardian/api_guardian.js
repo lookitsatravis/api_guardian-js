@@ -26,7 +26,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { return step("next", value); }, function (err) { return step("throw", err); }); } } return step("next"); }); }; }
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -35,6 +35,7 @@ var __defaultConfig = {
   localStorageKey: constants.DEFAULT_LOCAL_STORAGE_KEY,
   apiUrl: 'http://localhost:3000',
   loginUrl: 'auth/access/token',
+  registerUrl: 'auth/register',
   resetPasswordUrl: 'auth/reset-password',
   completeResetPasswordUrl: 'auth/complete-reset-password',
   userUrl: 'users/:id'
@@ -43,7 +44,7 @@ var __currentUser = null;
 
 var ApiGuardian = function () {
   function ApiGuardian() {
-    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, ApiGuardian);
 
@@ -61,7 +62,7 @@ var ApiGuardian = function () {
   }, {
     key: 'loginWithEmail',
     value: function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(email, password) {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(email, password) {
         return regeneratorRuntime.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -81,7 +82,7 @@ var ApiGuardian = function () {
       }));
 
       function loginWithEmail(_x2, _x3) {
-        return ref.apply(this, arguments);
+        return _ref.apply(this, arguments);
       }
 
       return loginWithEmail;
@@ -89,7 +90,7 @@ var ApiGuardian = function () {
   }, {
     key: 'loginWithFacebook',
     value: function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(accessToken) {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(accessToken) {
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
@@ -109,7 +110,7 @@ var ApiGuardian = function () {
       }));
 
       function loginWithFacebook(_x4) {
-        return ref.apply(this, arguments);
+        return _ref2.apply(this, arguments);
       }
 
       return loginWithFacebook;
@@ -117,8 +118,8 @@ var ApiGuardian = function () {
   }, {
     key: 'login',
     value: function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee3(body) {
-        var request = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+      var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(body) {
+        var request = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
         var loginUrl, response;
         return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
@@ -152,8 +153,8 @@ var ApiGuardian = function () {
         }, _callee3, this, [[2, 10]]);
       }));
 
-      function login(_x5, _x6) {
-        return ref.apply(this, arguments);
+      function login(_x5) {
+        return _ref3.apply(this, arguments);
       }
 
       return login;
@@ -161,7 +162,7 @@ var ApiGuardian = function () {
   }, {
     key: 'refreshCurrentUser',
     value: function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee4() {
+      var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
         var authData, accessToken, tokenData, userUrl, response;
         return regeneratorRuntime.wrap(function _callee4$(_context4) {
           while (1) {
@@ -170,121 +171,129 @@ var ApiGuardian = function () {
                 authData = this.getAuthData();
 
                 if (!_utils.TokenUtils.isAuthDataValid(authData)) {
-                  _context4.next = 18;
+                  _context4.next = 20;
                   break;
                 }
 
-                accessToken = authData.access_token;
+                accessToken = this.getAccessToken();
+
+                if (accessToken) {
+                  _context4.next = 5;
+                  break;
+                }
+
+                return _context4.abrupt('return', Promise.reject('Auth data invalid.'));
+
+              case 5:
                 tokenData = _utils.TokenUtils.decodeAccessToken(accessToken);
                 userUrl = _utils.UrlUtils.buildUserUrl(this.config.apiUrl, this.config.userUrl, tokenData.user.id);
-                _context4.prev = 5;
-                _context4.next = 8;
+                _context4.prev = 7;
+                _context4.next = 10;
                 return _http2.default.getJson(userUrl);
 
-              case 8:
+              case 10:
                 response = _context4.sent;
 
                 __buildCurrentUser.call(this, tokenData, response);
                 return _context4.abrupt('return', Promise.resolve(this.currentUser));
 
-              case 13:
-                _context4.prev = 13;
-                _context4.t0 = _context4['catch'](5);
+              case 15:
+                _context4.prev = 15;
+                _context4.t0 = _context4['catch'](7);
                 return _context4.abrupt('return', Promise.reject(_context4.t0));
 
-              case 16:
-                _context4.next = 21;
+              case 18:
+                _context4.next = 23;
                 break;
 
-              case 18:
+              case 20:
                 this.clearAuthData();
                 this.clearCurrentUser();
                 return _context4.abrupt('return', Promise.reject('Auth data invalid.'));
 
-              case 21:
+              case 23:
               case 'end':
                 return _context4.stop();
             }
           }
-        }, _callee4, this, [[5, 13]]);
+        }, _callee4, this, [[7, 15]]);
       }));
 
       function refreshCurrentUser() {
-        return ref.apply(this, arguments);
+        return _ref4.apply(this, arguments);
       }
 
       return refreshCurrentUser;
     }()
   }, {
+    key: 'refreshSession',
+    value: function () {
+      var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
+        var refreshToken;
+        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                refreshToken = this.getRefreshToken();
+
+                if (!refreshToken) {
+                  _context5.next = 5;
+                  break;
+                }
+
+                return _context5.abrupt('return', this.login({
+                  grant_type: 'refresh_token',
+                  refresh_token: refreshToken
+                }));
+
+              case 5:
+                this.clearAuthData();
+                this.clearCurrentUser();
+                return _context5.abrupt('return', Promise.reject('Auth data invalid.'));
+
+              case 8:
+              case 'end':
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this);
+      }));
+
+      function refreshSession() {
+        return _ref5.apply(this, arguments);
+      }
+
+      return refreshSession;
+    }()
+  }, {
     key: 'logout',
     value: function logout() {
-      // TODO: Ddigits logout
       this.clearAuthData();
       this.clearCurrentUser();
       return Promise.resolve();
     }
   }, {
-    key: 'resetPassword',
+    key: 'register',
     value: function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee5(email) {
-        var request = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-        var resetPasswordUrl, response;
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                resetPasswordUrl = _utils.UrlUtils.buildResetPasswordUrl(this.config.apiUrl, this.config.resetPasswordUrl);
-
-
-                request.body = {
-                  email: email
-                };
-
-                _context5.prev = 2;
-                _context5.next = 5;
-                return _http2.default.postJson(resetPasswordUrl, request, true);
-
-              case 5:
-                response = _context5.sent;
-                return _context5.abrupt('return', Promise.resolve(response));
-
-              case 9:
-                _context5.prev = 9;
-                _context5.t0 = _context5['catch'](2);
-                return _context5.abrupt('return', Promise.reject(_context5.t0));
-
-              case 12:
-              case 'end':
-                return _context5.stop();
-            }
-          }
-        }, _callee5, this, [[2, 9]]);
-      }));
-
-      function resetPassword(_x8, _x9) {
-        return ref.apply(this, arguments);
-      }
-
-      return resetPassword;
-    }()
-  }, {
-    key: 'completeResetPassword',
-    value: function () {
-      var ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee6(body) {
-        var request = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-        var completeResetPasswordUrl, response;
+      var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(email, password) {
+        var registerUrl, response;
         return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
-                completeResetPasswordUrl = _utils.UrlUtils.buildCompleteResetPasswordUrl(this.config.apiUrl, this.config.completeResetPasswordUrl);
+                registerUrl = _utils.UrlUtils.buildRegisterUrl(this.config.apiUrl, this.config.registerUrl);
 
 
-                request.body = body;
+                request.body = {
+                  'type': 'email',
+                  'email': email,
+                  'password': password,
+                  'password_confirmation': password
+                };
 
                 _context6.prev = 2;
                 _context6.next = 5;
-                return _http2.default.postJson(completeResetPasswordUrl, request, true);
+                return _http2.default.postJson(registerUrl, request, true);
 
               case 5:
                 response = _context6.sent;
@@ -303,8 +312,96 @@ var ApiGuardian = function () {
         }, _callee6, this, [[2, 9]]);
       }));
 
-      function completeResetPassword(_x11, _x12) {
-        return ref.apply(this, arguments);
+      function register(_x7, _x8) {
+        return _ref6.apply(this, arguments);
+      }
+
+      return register;
+    }()
+  }, {
+    key: 'resetPassword',
+    value: function () {
+      var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(email) {
+        var request = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var resetPasswordUrl, response;
+        return regeneratorRuntime.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                resetPasswordUrl = _utils.UrlUtils.buildResetPasswordUrl(this.config.apiUrl, this.config.resetPasswordUrl);
+
+
+                request.body = {
+                  email: email
+                };
+
+                _context7.prev = 2;
+                _context7.next = 5;
+                return _http2.default.postJson(resetPasswordUrl, request, true);
+
+              case 5:
+                response = _context7.sent;
+                return _context7.abrupt('return', Promise.resolve(response));
+
+              case 9:
+                _context7.prev = 9;
+                _context7.t0 = _context7['catch'](2);
+                return _context7.abrupt('return', Promise.reject(_context7.t0));
+
+              case 12:
+              case 'end':
+                return _context7.stop();
+            }
+          }
+        }, _callee7, this, [[2, 9]]);
+      }));
+
+      function resetPassword(_x9) {
+        return _ref7.apply(this, arguments);
+      }
+
+      return resetPassword;
+    }()
+  }, {
+    key: 'completeResetPassword',
+    value: function () {
+      var _ref8 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(email) {
+        var request = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        var completeResetPasswordUrl, response;
+        return regeneratorRuntime.wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                completeResetPasswordUrl = _utils.UrlUtils.buildCompleteResetPasswordUrl(this.config.apiUrl, this.config.completeResetPasswordUrl);
+
+
+                request.body = {
+                  email: email
+                };
+
+                _context8.prev = 2;
+                _context8.next = 5;
+                return _http2.default.postJson(completeResetPasswordUrl, request, true);
+
+              case 5:
+                response = _context8.sent;
+                return _context8.abrupt('return', Promise.resolve(response));
+
+              case 9:
+                _context8.prev = 9;
+                _context8.t0 = _context8['catch'](2);
+                return _context8.abrupt('return', Promise.reject(_context8.t0));
+
+              case 12:
+              case 'end':
+                return _context8.stop();
+            }
+          }
+        }, _callee8, this, [[2, 9]]);
+      }));
+
+      function completeResetPassword(_x11) {
+        return _ref8.apply(this, arguments);
       }
 
       return completeResetPassword;
@@ -331,6 +428,12 @@ var ApiGuardian = function () {
     value: function getAccessToken() {
       var authData = this.getAuthData();
       return authData && authData.access_token ? authData.access_token : null;
+    }
+  }, {
+    key: 'getRefreshToken',
+    value: function getRefreshToken() {
+      var authData = this.getAuthData();
+      return authData && authData.refresh_token ? authData.refresh_token : null;
     }
   }, {
     key: 'clearCurrentUser',
@@ -416,157 +519,3 @@ function __buildCurrentUser(tokenData, userData) {
 }
 
 exports.default = ApiGuardian;
-
-// function AuthService($rootScope, $q, $http, $window, $localStorage, $ionicModal, $ionicLoading, $cordovaDialogs, DigitsService, DeviceService, APP_CONFIG) {
-//   this.registerWithEmail = registerWithEmail;
-//   this.registerWithDigits = registerWithDigits;
-//   this.registerWithFacebook = registerWithFacebook;
-//   this.registerAsGuest = registerAsGuest;
-//   this.register = register;
-//   this.loginWithDigits = loginWithDigits;
-//   this.resetPassword = resetPassword;
-//   this.completeResetPassword = completeResetPassword;
-//   this.refreshSession = refreshSession;
-//   this.sessionExpired = sessionExpired;
-//   this.updateUserSetting = updateUserSetting;
-//   this.handleResetPassword = handleResetPassword;
-//
-//   function registerWithEmail(fields) {
-//     return this.register(
-//       Object.assign({}, fields, {
-//         type: 'email'
-//       })
-//     );
-//   }
-//
-//   function registerWithDigits(digitsOptions) {
-//     return DigitsService.authenticate(digitsOptions)
-//       .then(function(session) {
-//         var authData = session.authData;
-//         return _this.register({
-//           type: 'digits',
-//           auth_url: authData[DIGITS_URL_KEY],
-//           auth_header: authData[DIGITS_AUTH_HEADER_KEY]
-//         });
-//       });
-//   }
-//
-//   function registerWithFacebook(fields) {
-//     return this.register(
-//       Object.assign({}, fields, {
-//         type: 'facebook'
-//       })
-//     );
-//   }
-//
-//   function registerAsGuest() {
-//     var deferred = $q.defer();
-//
-//     deferred.reject('Not Yet Implemented');
-//
-//     return deferred.promise;
-//   }
-//
-//   function register(options) {
-//     return $http.post(APP_CONFIG.API_URL + '/auth/register', options)
-//       .then(function(result) {
-//         $rootScope.$emit(REGISTER_SUCCESS);
-//       }, function(errorResult) {
-//         $rootScope.$emit(REGISTER_FAILED, errorResult.statusText);
-//         return $q.reject({errors: errorResult.data.errors, result: errorResult});
-//       })
-//   }
-//
-//   function loginWithDigits(digitsOptions) {
-//     return DigitsService.authenticate(digitsOptions)
-//       .then(function(session) {
-//         var encodedPassword = getEncodedDigitsPassword(session.authData);
-//
-//         return _this.login({
-//           type: 'digits',
-//           username: session.phoneNumber,
-//           password: encodedPassword
-//         });
-//       });
-//   }
-//
-//   function resetPassword(email) {
-//     return $http.post(APP_CONFIG.API_URL + '/auth/reset-password', {email: email});
-//   }
-//
-//   function completeResetPassword(options) {
-//     return $http.post(APP_CONFIG.API_URL + '/auth/complete-reset-password', {
-//       token: options.token,
-//       email: options.email,
-//       password: options.password,
-//       password_confirmation: options.password_confirmation
-//     });
-//   }
-//
-//   function refreshSession() {
-//     var sessionData = this.getAccessToken();
-//
-//     if(sessionData && sessionData.refresh_token) {
-//       var params = {
-//         grant_type: 'refresh_token',
-//         refresh_token: sessionData.refresh_token
-//       };
-//
-//       return $http.post(APP_CONFIG.API_URL + '/auth/access/token', params)
-//         .then(function(result) {
-//           if(result.status == 200 && result.data) {
-//             console.log('AuthService#refreshSession: Session refreshed successfully.');
-//             updateLocalStorage('accessToken', result.data);
-//             return _this.refreshCurrentUser();
-//           } else {
-//             console.log('AuthService#refreshSession: Session could not be refreshed.');
-//             return _this.sessionExpired();
-//           }
-//         }, function(err) {
-//           console.log('AuthService#refreshSession: Session could not be refreshed.');
-//           return _this.sessionExpired();
-//         });
-//     } else {
-//       return $q.reject('No refresh token is available.');
-//     }
-//   }
-//
-//   function sessionExpired() {
-//     $rootScope.$emit(SESSION_EXPIRED);
-//     _this.clearAccessToken();
-//     return $q.reject('Session has expired.');
-//   }
-//
-//   function getEncodedDigitsPassword(authHeaders) {
-//     var apiUrl = authHeaders[DIGITS_URL_KEY];
-//     var authHeader = authHeaders[DIGITS_AUTH_HEADER_KEY];
-//     return $window.btoa([apiUrl, authHeader].join(';'));
-//   }
-//
-//   function prepSettings(settings) {
-//     var prepped = {};
-//     Object.keys(settings).forEach(function(key) {
-//       var setting = settings[key];
-//       if(setting == "true") {
-//         prepped[key] = true;
-//       } else if (setting == "false") {
-//         prepped[key] = false;
-//       } else {
-//         prepped[key] = setting;
-//       }
-//     });
-//     return prepped;
-//   }
-//
-//   function updateUserSetting(key, value) {
-//     var setting = {
-//       key: key,
-//       value: value
-//     };
-//
-//     return $http.put(APP_CONFIG.API_URL + '/users/' + _this._currentUser.id + '/settings', {setting: setting})
-//       .then(function() {
-//         _this._currentUser.settings[key] = value;
-//       });
-//   }
-//
