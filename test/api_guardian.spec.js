@@ -12,6 +12,7 @@ describe('ApiGuardian', () => {
     apiUrl: 'http://localhost:3000',
     localStorageKey: 'ag',
     loginUrl: 'auth/access/token',
+    registerUrl: 'auth/register',
     resetPasswordUrl: 'auth/reset-password',
     completeResetPasswordUrl: 'auth/complete-reset-password',
     userUrl: 'users/:id'

@@ -9,6 +9,14 @@ class UrlUtils {
     }
   }
 
+  static buildRegisterUrl(apiUrl, registerUrl) {
+    if(apiUrl && registerUrl) {
+      return `${apiUrl}/${registerUrl}`;
+    } else {
+      throw new ValidationError('apiUrl and registerUrl are required!');
+    }
+  }
+
   static buildResetPasswordUrl(apiUrl, resetPasswordUrl) {
     if(apiUrl && resetPasswordUrl) {
       return `${apiUrl}/${resetPasswordUrl}`;

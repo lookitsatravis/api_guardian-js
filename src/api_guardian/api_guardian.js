@@ -9,6 +9,7 @@ let __defaultConfig = {
   localStorageKey: constants.DEFAULT_LOCAL_STORAGE_KEY,
   apiUrl: 'http://localhost:3000',
   loginUrl: 'auth/access/token',
+  registerUrl: 'auth/register',
   resetPasswordUrl: 'auth/reset-password',
   completeResetPasswordUrl: 'auth/complete-reset-password',
   userUrl: 'users/:id'

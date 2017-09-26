@@ -22,6 +22,20 @@ describe('Utils', () => {
       });
     });
 
+    describe('.buildRegisterUrl', () => {
+      it('should fail if arguments cannot be validated', () => {
+        let validationError = /apiUrl and registerUrl are required!/;
+        (() => UrlUtils.buildRegisterUrl('', '')).should.throw(validationError);
+        (() => UrlUtils.buildRegisterUrl()).should.throw(validationError);
+        (() => UrlUtils.buildRegisterUrl(null, false)).should.throw(validationError);
+      });
+
+      it('should return build URL if arguments validate', () => {
+        let result = UrlUtils.buildRegisterUrl('https://localhost:3000', 'register');
+        result.should.equal('https://localhost:3000/register');
+      });
+    });
+
     describe('.buildResetPasswordUrl', () => {
       it('should fail if arguments cannot be validated', () => {
         let validationError = /apiUrl and resetPasswordUrl are required!/;
