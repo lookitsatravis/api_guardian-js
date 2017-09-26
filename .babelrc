@@ -1,8 +1,11 @@
 {
-  "presets": ["es2015", "stage-0"],
+  "presets": [
+    "env",
+  ],
   "plugins": [
     "transform-function-bind",
     "transform-async-to-generator",
+    "transform-object-rest-spread",
     ["babel-plugin-transform-builtin-extend", {
       "globals": ["Error", "Array"],
       "approximate": true

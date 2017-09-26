@@ -7,3 +7,7 @@ JavaScript library for interacting with ApiGurdian-enabled apps.
 ## Installation
 
 `npm install lookitsatravis/api_guardian-js`
+
+or
+
+`yarn add lookitsatravis/api_guardian-js`
