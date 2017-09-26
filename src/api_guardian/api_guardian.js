@@ -31,6 +31,14 @@ class ApiGuardian {
     return __currentUser ? Object.assign({}, __currentUser) : null;
   }
 
+  get accessToken() {
+    return this.getAccessToken();
+  }
+
+  get refreshToken() {
+    return this.getRefreshToken();
+  }
+
   configure(fn) {
     let result = fn(Object.assign({}, __config));
     return __config = Object.assign({}, __config, result);
