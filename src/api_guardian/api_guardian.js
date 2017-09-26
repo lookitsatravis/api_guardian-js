@@ -69,6 +69,13 @@ class ApiGuardian {
   async refreshCurrentUser() {
     let authData = this.getAuthData();
 
+    if (TokenUtils.isAuthDataValid(authData)) {
+      let accessToken = this.getAccessToken();
+
+      if (!accessToken) {
+        return Promise.reject('Auth data invalid.');
+      }
+
       let tokenData = TokenUtils.decodeAccessToken(accessToken);
       let userUrl = UrlUtils.buildUserUrl(this.config.apiUrl, this.config.userUrl, tokenData.user.id);
 
