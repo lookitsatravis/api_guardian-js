@@ -43,9 +43,6 @@ export default class Http {
         request.headers = {};
       }
 
-      // 'Content-Type': 'application/vnd.api+json',
-      // 'Accept': 'application/vnd.api+json',
-
       request.headers = {
         'Authorization': `Bearer ${this.getAccessToken()}`,
         ...request.headers
