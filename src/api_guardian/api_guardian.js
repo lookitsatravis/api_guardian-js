@@ -18,6 +18,7 @@ let __currentUser = null;
 class ApiGuardian {
   constructor(options = {}) {
     this._inited = false;
+    this._refreshRequest = null;
 
     this::__initialize(options);
   }
@@ -93,13 +94,22 @@ class ApiGuardian {
   }
 
   async refreshSession() {
+    if (this._refreshRequest) {
+      return this._refreshRequest;
+    }
+
     let refreshToken = this.getRefreshToken();
 
     if (refreshToken) {
-      return this.login({
+      this._refreshRequest = this.login({
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
-      });
+      })
+        .finally(() => {
+          this._refreshRequest = null;
+        });
+
+      return this._refreshRequest;
     } else {
       this.clearAuthData();
       this.clearCurrentUser();
