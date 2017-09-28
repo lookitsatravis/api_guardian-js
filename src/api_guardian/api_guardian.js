@@ -132,7 +132,7 @@ class ApiGuardian {
     return Promise.resolve();
   }
 
-  async register(email, password) {
+  async register(email, password, request = {}) {
     let registerUrl = UrlUtils.buildRegisterUrl(this.config.apiUrl, this.config.registerUrl);
 
     request.body = {
