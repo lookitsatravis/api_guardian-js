@@ -182,7 +182,11 @@ class ApiGuardian {
   }
 
   async changePassword(currentPassword, newPassword, newPasswordConfirmation, request = {}) {
-    let changePasswordUrl = UrlUtils.buildChangePasswordUrl(this.config.apiUrl, this.config.changePasswordUrl);
+    if (!this.currentUser) {
+      return Promise.reject('Current user is null.');
+    }
+
+    let changePasswordUrl = UrlUtils.buildChangePasswordUrl(this.config.apiUrl, this.config.changePasswordUrl, this.currentUser.id);
 
     request.body = {
       password: currentPassword,
