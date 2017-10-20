@@ -11,7 +11,8 @@ let __defaultConfig = {
   registerUrl: 'auth/register',
   resetPasswordUrl: 'auth/reset-password',
   completeResetPasswordUrl: 'auth/complete-reset-password',
-  userUrl: 'auth/users/:id'
+  userUrl: 'auth/users/:id',
+  changePasswordUrl: 'auth/users/:id/change_password',
 };
 let __currentUser = null;
 
@@ -174,6 +175,23 @@ class ApiGuardian {
 
     try {
       let response = await http.postJson(completeResetPasswordUrl, request, true);
+      return Promise.resolve(response);
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  async changePassword(currentPassword, newPassword, newPasswordConfirmation, request = {}) {
+    let changePasswordUrl = UrlUtils.buildChangePasswordUrl(this.config.apiUrl, this.config.changePasswordUrl);
+
+    request.body = {
+      password: currentPassword,
+      new_password: newPassword,
+      new_password_confirmation: newPasswordConfirmation,
+    };
+
+    try {
+      let response = await http.postJson(changePasswordUrl, request, true);
       return Promise.resolve(response);
     } catch (error) {
       return Promise.reject(error);

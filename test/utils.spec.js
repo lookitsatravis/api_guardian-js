@@ -63,6 +63,34 @@ describe('Utils', () => {
         result.should.equal('https://localhost:3000/complete-reset');
       });
     });
+
+    describe('.buildUserUrl', () => {
+      it('should fail if arguments cannot be validated', () => {
+        let validationError = /apiUrl, userUrl, and userId are required!/;
+        (() => UrlUtils.buildUserUrl('', '', '')).should.throw(validationError);
+        (() => UrlUtils.buildUserUrl()).should.throw(validationError);
+        (() => UrlUtils.buildUserUrl(null, false, null)).should.throw(validationError);
+      });
+
+      it('should return build URL if arguments validate', () => {
+        let result = UrlUtils.buildUserUrl('https://localhost:3000', 'users/:id', 1);
+        result.should.equal('https://localhost:3000/users/1');
+      });
+    });
+
+    describe('.buildChangePasswordUrl', () => {
+      it('should fail if arguments cannot be validated', () => {
+        let validationError = /apiUrl, changePasswordUrl, and userId are required!/;
+        (() => UrlUtils.buildChangePasswordUrl('', '', '')).should.throw(validationError);
+        (() => UrlUtils.buildChangePasswordUrl()).should.throw(validationError);
+        (() => UrlUtils.buildChangePasswordUrl(null, false, null)).should.throw(validationError);
+      });
+
+      it('should return build URL if arguments validate', () => {
+        let result = UrlUtils.buildChangePasswordUrl('https://localhost:3000', 'users/:id/change_password', 1);
+        result.should.equal('https://localhost:3000/users/1/change_password');
+      });
+    });
   });
 
   describe('TokenUtils', () => {

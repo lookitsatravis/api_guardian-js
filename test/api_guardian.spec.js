@@ -15,7 +15,8 @@ describe('ApiGuardian', () => {
     registerUrl: 'auth/register',
     resetPasswordUrl: 'auth/reset-password',
     completeResetPasswordUrl: 'auth/complete-reset-password',
-    userUrl: 'auth/users/:id'
+    userUrl: 'auth/users/:id',
+    changePasswordUrl: 'auth/users/:id/change_password',
   };
 
   let api_guardian;
@@ -119,6 +120,13 @@ describe('ApiGuardian', () => {
   describe("#completeResetPassword", () => {
     it('returns a Promise', () => {
       let result = api_guardian.completeResetPassword();
+      result.should.be.an.instanceof(Promise);
+    });
+  });
+
+  describe("#changePassword", () => {
+    it('returns a Promise', () => {
+      let result = api_guardian.changePassword();
       result.should.be.an.instanceof(Promise);
     });
   });

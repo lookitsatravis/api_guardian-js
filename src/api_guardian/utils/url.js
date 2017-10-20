@@ -40,6 +40,14 @@ class UrlUtils {
       throw new ValidationError('apiUrl, userUrl, and userId are required!');
     }
   }
+
+  static buildChangePasswordUrl(apiUrl, changePasswordUrl, userId) {
+    if(apiUrl && changePasswordUrl && userId) {
+      return `${apiUrl}/${changePasswordUrl.replace(/:id/, userId)}`;
+    } else {
+      throw new ValidationError('apiUrl, changePasswordUrl, and userId are required!');
+    }
+  }
 }
 
 export default UrlUtils;
