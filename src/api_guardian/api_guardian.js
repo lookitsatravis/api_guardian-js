@@ -195,7 +195,7 @@ class ApiGuardian {
     };
 
     try {
-      let response = await http.postJson(changePasswordUrl, request, true);
+      let response = await http.postJson(changePasswordUrl, request);
       return Promise.resolve(response);
     } catch (error) {
       return Promise.reject(error);
