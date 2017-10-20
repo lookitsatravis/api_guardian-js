@@ -189,9 +189,15 @@ class ApiGuardian {
     let changePasswordUrl = UrlUtils.buildChangePasswordUrl(this.config.apiUrl, this.config.changePasswordUrl, this.currentUser.id);
 
     request.body = {
-      password: currentPassword,
-      new_password: newPassword,
-      new_password_confirmation: newPasswordConfirmation,
+      data: {
+        id: this.currentUser.id,
+        type: 'users',
+        attributes: {
+          'password': currentPassword,
+          'new-password': newPassword,
+          'new-password-confirmation': newPasswordConfirmation,
+        }
+      }
     };
 
     if(!request.headers) {
