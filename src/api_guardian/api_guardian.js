@@ -194,6 +194,12 @@ class ApiGuardian {
       new_password_confirmation: newPasswordConfirmation,
     };
 
+    if(!request.headers) {
+      request.headers = {};
+    }
+
+    request.headers['Content-Type'] = 'application/vnd.api+json';
+
     try {
       let response = await http.postJson(changePasswordUrl, request);
       return Promise.resolve(response);

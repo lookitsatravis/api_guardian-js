@@ -28,7 +28,9 @@ export default class Http {
       request.headers = {};
     }
 
-    request.headers['Content-Type'] = 'application/json';
+    if (!request.headers['Content-Type']) {
+      request.headers['Content-Type'] = 'application/json';
+    }
 
     if(request.body && typeof request.body !== String) {
       request.body = JSON.stringify(request.body);
