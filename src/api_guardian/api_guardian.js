@@ -212,6 +212,20 @@ class ApiGuardian {
     }
   }
 
+
+  /**
+   * This method can be used to inject auth token data if it is received from
+   * outside of this library.
+   *
+   * @param {any} authData
+   * @returns Promise
+   * @memberof ApiGuardian
+   */
+  setTokenData(authData) {
+    this::__processAuthData(authData);
+    return Promise.resolve();
+  }
+
   getAuthData() {
     let ls = this::__getLocalStorage();
 
